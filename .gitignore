@@ -1,0 +1,10 @@
+# editor files
+*~
+*.bak
+
+# generated build files
+buildlib.csm_share_cpl7c
+
+# generated namelist build files
+*/*/*/*/buildnmlc
+

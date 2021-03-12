@@ -7,4 +7,5 @@ buildlib.csm_share_cpl7c
 
 # generated namelist build files
 */*/*/*/buildnmlc
+*/*/buildnmlc
 

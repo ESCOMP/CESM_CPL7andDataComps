@@ -1,4 +1,4 @@
-set(DRV_ROOT "${CIME_ROOT}/src/drivers/mct")
+set(DRV_ROOT "${CIME_ROOT}/cpl7/driver")
 
 add_definitions(
   -DNUM_COMP_INST_ATM=1

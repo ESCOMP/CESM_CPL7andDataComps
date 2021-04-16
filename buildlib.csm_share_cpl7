@@ -51,6 +51,8 @@ def buildlib(bldroot, installpath, case):
     caseroot = case.get_value("CASEROOT")
     libroot = case.get_value("LIBROOT")
 
+
+
     filepath = [os.path.join(caseroot,"SourceMods","src.share"),
                 os.path.join(srcroot,"cpl7","mct_shr"),
                 os.path.join(srcroot,"cpl7","shr"),
@@ -71,6 +73,7 @@ def buildlib(bldroot, installpath, case):
         use_esmf = "esmf"
     else:
         use_esmf = "noesmf"
+        filepath.append(os.path.join(srcroot,"share","src","esmf_wrf_timemgr"))
 
     comp_interface = case.get_value("COMP_INTERFACE")
     ninst_value = case.get_value("NINST_VALUE")

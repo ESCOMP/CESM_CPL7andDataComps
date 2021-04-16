@@ -1,4 +1,8 @@
-set(DRV_ROOT "${CIME_ROOT}/cpl7/driver")
+if (EXISTS ${CIME_ROOT}/cpl7/driver)
+  set(DRV_ROOT "${CIME_ROOT}/cpl7/driver")
+else()
+  set(DRV_ROOT "${CIME_ROOT}/src/drivers/mct")
+endif()
 
 add_definitions(
   -DNUM_COMP_INST_ATM=1
@@ -20,7 +24,11 @@ endif()
 # Add source directories from stubs. This should be done first, so that in the
 # case of name collisions, the drv versions take precedence (when there are two
 # files with the same name, the one added later wins).
-add_subdirectory(${CIME_ROOT}/src/share/unit_test_stubs/pio pio)
+if (EXISTS ${SRC_ROOT}/share/unit_test_stubs/pio)
+  add_subdirectory(${SRC_ROOT}/share/unit_test_stubs/pio pio)
+else()
+  add_subdirectory(${CIME_ROOT}/src/share/unit_test_stubs/pio pio)
+endif()
 
 # Add drv source directories
 add_subdirectory(${DRV_ROOT}/shr drv_shr)

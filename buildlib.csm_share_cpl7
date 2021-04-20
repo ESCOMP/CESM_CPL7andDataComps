@@ -54,14 +54,14 @@ def buildlib(bldroot, installpath, case):
 
 
     filepath = [os.path.join(caseroot,"SourceMods","src.share"),
-                os.path.join(srcroot,"cpl7","mct_shr"),
-                os.path.join(srcroot,"cpl7","shr"),
-                os.path.join(srcroot,"cpl7","components","streams")]
+                os.path.join(srcroot,"components","cpl7","mct_shr"),
+                os.path.join(srcroot,"components","cpl7","shr"),
+                os.path.join(srcroot,"components","cpl7","components","streams")]
 
     # Append path for driver - currently only values of 'mct' and 'nuopc' are accepted
 
     if comp_interface == "mct":
-        filepath.append(os.path.join(srcroot,"cpl7","driver","shr"))
+        filepath.append(os.path.join(srcroot,"components","cpl7","driver","shr"))
     elif comp_interface == "nuopc":
         filepath.append(os.path.join(cimeroot,"src","share","nuopc"))
         filepath.append(os.path.join(cimeroot,"src","share","streams_nuopc"))

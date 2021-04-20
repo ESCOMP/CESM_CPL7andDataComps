@@ -1,5 +1,5 @@
-if (EXISTS ${CIME_ROOT}/cpl7/driver)
-  set(DRV_ROOT "${CIME_ROOT}/cpl7/driver")
+if (EXISTS ${CIME_ROOT}/components/cpl7/driver)
+  set(DRV_ROOT "${CIME_ROOT}/components/cpl7/driver")
 else()
   set(DRV_ROOT "${CIME_ROOT}/src/drivers/mct")
 endif()

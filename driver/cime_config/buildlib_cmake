@@ -21,6 +21,7 @@ def buildlib(bldroot, installpath, case): # pylint: disable=unused-argument
 ###############################################################################
     casebuild = case.get_value("CASEBUILD")
     caseroot  = case.get_value("CASEROOT")
+    srcroot   = case.get_value("SRCROOT")
     cimeroot  = case.get_value("CIMEROOT")
     num_esp   = case.get_value("NUM_COMP_INST_ESP")
 
@@ -28,7 +29,7 @@ def buildlib(bldroot, installpath, case): # pylint: disable=unused-argument
 
     with open(os.path.join(casebuild, "cplconf", "Filepath"), "w") as out:
         out.write(os.path.join(caseroot, "SourceMods", "src.drv") + "\n")
-        out.write(os.path.join(cimeroot, "src", "drivers", "mct", "main") + "\n")
+        out.write(os.path.join(srcroot, "components", "cpl7", "main") + "\n")
 
     with open(os.path.join(casebuild, "cplconf", "CIME_cppdefs"), "w") as out:
         out.write("")

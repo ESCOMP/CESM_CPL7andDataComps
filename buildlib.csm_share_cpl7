@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 def parse_command_line(args, description):
 ###############################################################################
-    parser = argparse.ArgumentParser(
+    parser=argparse.ArgumentParser(
         usage="""\n{0} [--debug]
 OR
 {0} --verbose

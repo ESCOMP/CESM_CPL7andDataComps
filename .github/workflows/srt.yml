@@ -81,7 +81,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/pnetcdf
-          key: ${{ runner.os }}-${{ env.PNETCDF_VERSION}}-pnetcdf-redo
+          key: ${{ runner.os }}-${{ env.PNETCDF_VERSION}}-pnetcdf-redo1
 
       - name: pnetcdf build
         if: steps.cache-pnetcdf.outputs.cache-hit != 'true'
@@ -100,7 +100,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/netcdf-fortran
-          key: ${{ runner.os }}-${{ env.NETCDF_FORTRAN_VERSION }}-netcdf-fortran-redo
+          key: ${{ runner.os }}-${{ env.NETCDF_FORTRAN_VERSION }}-netcdf-fortran-redo1
 
       - name: netcdf fortran build
         if: steps.cache-netcdf-fortran.outputs.cache-hit != 'true'

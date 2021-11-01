@@ -124,7 +124,7 @@ module seq_flds_mod
   use shr_kind_mod      , only : CX => shr_kind_CX, CXX => shr_kind_CXX
   use shr_sys_mod       , only : shr_sys_abort
   use seq_comm_mct      , only : seq_comm_iamroot, seq_comm_setptrs, logunit
-  use seq_drydep_mod    , only : seq_drydep_init, seq_drydep_readnl, lnd_drydep
+  use shr_drydep_mod    , only : shr_drydep_init, shr_drydep_readnl, n_drydep
   use shr_megan_mod     , only : shr_megan_readnl, shr_megan_mechcomps_n
   use shr_fire_emis_mod , only : shr_fire_emis_readnl, shr_fire_emis_mechcomps_n, shr_fire_emis_ztop_token
   use shr_carma_mod     , only : shr_carma_readnl
@@ -140,7 +140,7 @@ module seq_flds_mod
 
   integer, parameter, private :: CSS = 256  ! use longer short character
   integer, parameter, private :: CLL = 1024
-  character(len=CXX) :: seq_drydep_fields   ! List of dry-deposition fields
+  character(len=CXX) :: shr_drydep_fields   ! List of dry-deposition fields
   character(len=CXX) :: megan_voc_fields    ! List of MEGAN VOC emission fields
   character(len=CXX) :: fire_emis_fields    ! List of fire emission fields
   character(len=CX)  :: carma_fields        ! List of CARMA fields from lnd->atm
@@ -702,7 +702,7 @@ contains
     units    = 'kg m-3'
     attname  = 'Sa_dens'
     call metadata_set(attname, longname, stdname, units)
-    
+
     ! UoverN for use by topounits
     if (trim(cime_model) == 'e3sm') then
        call seq_flds_add(a2x_states,"Sa_uovern")
@@ -2190,8 +2190,8 @@ contains
        attname  = 'Flrr_supply'
        call metadata_set(attname, longname, stdname, units)
     endif
-    
-	if (trim(cime_model) == 'e3sm') then   
+
+	if (trim(cime_model) == 'e3sm') then
        call seq_flds_add(r2x_fluxes,'Flrr_deficit')
        call seq_flds_add(x2l_fluxes,'Flrr_deficit')
        longname = 'River model supply deficit'
@@ -3462,21 +3462,21 @@ contains
     ! Then check if file exists and if not, n_drydep will be zero
     ! Then add dry deposition fields to land export and atmosphere import states
     ! Then initialize dry deposition fields
-    ! Note: CAM and CLM will then call seq_drydep_setHCoeff
+    ! Note: CAM and CLM will then call shr_drydep_setHCoeff
     !-----------------------------------------------------------------------------
 
-    call seq_drydep_readnl(nlfilename="drv_flds_in", ID=ID, seq_drydep_fields=seq_drydep_fields)
-    if ( lnd_drydep ) then
-       call seq_flds_add(l2x_states, seq_drydep_fields)
-       call seq_flds_add(x2a_states, seq_drydep_fields)
+    call shr_drydep_readnl(nlfilename="drv_flds_in", ID=ID, shr_drydep_fields=shr_drydep_fields)
+    if ( n_drydep>0 ) then
+       call seq_flds_add(l2x_states, shr_drydep_fields)
+       call seq_flds_add(x2a_states, shr_drydep_fields)
 
        longname = 'dry deposition velocity'
        stdname  = 'drydep_vel'
        units    = 'cm/sec'
 
-       call metadata_set(seq_drydep_fields, longname, stdname, units)
+       call metadata_set(shr_drydep_fields, longname, stdname, units)
     endif
-    call seq_drydep_init( )
+    call shr_drydep_init( )
 
     !-----------------------------------------------------------------------------
     ! Nitrogen Deposition fields

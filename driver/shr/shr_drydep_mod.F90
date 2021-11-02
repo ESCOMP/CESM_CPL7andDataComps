@@ -379,6 +379,8 @@ CONTAINS
     integer                         :: cpl_pio_iotype
     integer :: rcode, dimid, varid
 
+    if (dep_data_file=='NONE' .or. len_trim(dep_data_file)==0) return
+
     ! read data from input file
     cpl_name         =  seq_comm_name(CPLID)
     cpl_io_subsystem => shr_pio_getiosys(cpl_name)

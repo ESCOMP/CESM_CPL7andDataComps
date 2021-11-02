@@ -9,6 +9,11 @@ module seq_drydep_mod
   ! method specification
   character(len=*), parameter :: DD_XLND = 'xactive_lnd' ! dry-dep land
   character(len=*), parameter :: drydep_method = DD_XLND ! XLND is the only option now
-  logical, parameter :: lnd_drydep = .true.
+
+contains
+
+  logical function lnd_drydep
+    lnd_drydep = n_drydep>0
+  end function lnd_drydep
 
 end module seq_drydep_mod

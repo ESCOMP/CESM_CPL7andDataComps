@@ -124,7 +124,8 @@ module seq_flds_mod
   use shr_kind_mod      , only : CX => shr_kind_CX, CXX => shr_kind_CXX
   use shr_sys_mod       , only : shr_sys_abort
   use seq_comm_mct      , only : seq_comm_iamroot, seq_comm_setptrs, logunit
-  use shr_drydep_mod    , only : shr_drydep_init, shr_drydep_readnl, n_drydep
+  use seq_drydep_mod    , only : seq_drydep_readnl
+  use shr_drydep_mod    , only : shr_drydep_init, n_drydep
   use shr_megan_mod     , only : shr_megan_readnl, shr_megan_mechcomps_n
   use shr_fire_emis_mod , only : shr_fire_emis_readnl, shr_fire_emis_mechcomps_n, shr_fire_emis_ztop_token
   use shr_carma_mod     , only : shr_carma_readnl
@@ -3465,7 +3466,7 @@ contains
     ! Note: CAM and CLM will then call shr_drydep_setHCoeff
     !-----------------------------------------------------------------------------
 
-    call shr_drydep_readnl(nlfilename="drv_flds_in", ID=ID, shr_drydep_fields=shr_drydep_fields)
+    call seq_drydep_readnl(nlfilename="drv_flds_in", ID=ID, shr_drydep_fields=shr_drydep_fields)
     if ( n_drydep>0 ) then
        call seq_flds_add(l2x_states, shr_drydep_fields)
        call seq_flds_add(x2a_states, shr_drydep_fields)

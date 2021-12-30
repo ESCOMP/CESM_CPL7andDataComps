@@ -44,6 +44,12 @@ jobs:
         with:
           repository: ESMCI/cime
 
+      - name: ccs_config checkout
+        uses: actions/checkout@v2
+        with:
+          repository: ESMCI/ccs_config_cesm
+          path: ccs_config
+
       - name: share checkout
         uses: actions/checkout@v2
         with:

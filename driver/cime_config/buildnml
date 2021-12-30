@@ -233,7 +233,7 @@ def write_seq_maps_file(case, nmlgen, confdir):
     # TODO: for rof2ocn_fmapname -needs to be resolved since this is currently
     # used in prep_ocn_mod.F90 if flood_present is True - this is in issue #1908.
     # The following is only approriate for config_grids.xml version 2.0 or later
-    grid_version = Grids().get_version()
+    grid_version = Grids(comp_interface="mct").get_version()
     if grid_version >= 2.0:
         group_variables = nmlgen.get_group_variables("seq_maps")
         for name in group_variables:

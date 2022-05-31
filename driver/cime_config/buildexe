@@ -7,7 +7,7 @@ build model executable
 import sys, os
 
 cwd = os.getenv("CIMEROOT")
-sys.path.append(os.path.join(cwd,"scripts","Tools"))
+sys.path.append(os.path.join(cwd,"CIME","Tools"))
 
 from standard_script_setup import *
 from CIME.buildlib         import parse_input

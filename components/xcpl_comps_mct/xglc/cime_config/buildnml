@@ -7,7 +7,7 @@ build data model library
 import sys, os
 
 _CIMEROOT = os.getenv("CIMEROOT")
-sys.path.append(os.path.join(_CIMEROOT, "scripts", "Tools"))
+sys.path.append(os.path.join(_CIMEROOT, "CIME", "Tools"))
 
 from standard_script_setup import *
 from CIME.buildnml import build_xcpl_nml, parse_input

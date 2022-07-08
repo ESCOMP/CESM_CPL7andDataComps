@@ -669,7 +669,7 @@ contains
   !===============================================================================
 
   subroutine cime_pre_init1(esmf_log_option)
-    use shr_pio_mod, only : shr_pio_init1, shr_pio_init2
+    use driver_pio_mod, only: driver_pio_init1, driver_pio_init2
     use seq_comm_mct, only: num_inst_driver
     !----------------------------------------------------------
     !| Initialize MCT and MPI communicators and IO
@@ -708,10 +708,10 @@ contains
     !--- Initialize multiple driver instances, if requested ---
     call cime_cpl_init(global_comm, driver_comm, num_inst_driver, driver_id)
 
-    call shr_pio_init1(num_inst_total,NLFileName, driver_comm)
+    call driver_pio_init1(num_inst_total,NLFileName, driver_comm)
     !
     ! If pio_async_interface is true Global_comm is MPI_COMM_NULL on the servernodes
-    ! and server nodes do not return from shr_pio_init2
+    ! and server nodes do not return from driver_pio_init2
     !
     !   if (Global_comm /= MPI_COMM_NULL) then
 
@@ -938,9 +938,9 @@ contains
 
     !
     !  When using io servers (pio_async_interface=.true.) the server tasks do not return from
-    !  shr_pio_init2
+    !  driver_pio_init2
     !
-    call shr_pio_init2(comp_id,comp_name,comp_iamin,comp_comm,comp_comm_iam)
+    call driver_pio_init2(comp_id,comp_name,comp_iamin,comp_comm,comp_comm_iam)
 
   end subroutine cime_pre_init1
 
@@ -3623,7 +3623,7 @@ contains
 
   subroutine cime_final()
 
-    use shr_pio_mod, only : shr_pio_finalize
+    use driver_pio_mod, only : driver_pio_finalize
     use shr_wv_sat_mod, only: shr_wv_sat_final
 
     !------------------------------------------------------------------------
@@ -3654,7 +3654,7 @@ contains
     !------------------------------------------------------------------------
 
     call shr_wv_sat_final()
-    call shr_pio_finalize( )
+    call driver_pio_finalize( )
 
     call shr_mpi_min(msize ,msize0,mpicom_GLOID,' driver msize0', all=.true.)
     call shr_mpi_max(msize ,msize1,mpicom_GLOID,' driver msize1', all=.true.)

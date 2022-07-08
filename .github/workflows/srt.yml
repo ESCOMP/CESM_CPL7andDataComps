@@ -74,7 +74,7 @@ jobs:
           cache: 'pip'
 
       - name: pip install
-        run: pip install yaml
+        run: pip install PyYAML
           
       - name: mct install
         run: |

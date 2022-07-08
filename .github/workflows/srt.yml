@@ -71,7 +71,9 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-          cache: 'pip';
+          cache: 'pip'
+
+      - name: pip install
         run: pip install yaml
           
       - name: mct install

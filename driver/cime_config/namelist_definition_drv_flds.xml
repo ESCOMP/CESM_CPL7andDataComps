@@ -4,7 +4,7 @@
 
 <entry_id version="2.0">
 
-  <!-- 
+  <!--
        The following lists all of the namelist variables that can appear in the Buildconf/xxxconf/drv_flds_in
        files, where xxx = [cam, clm, ...]. The driver buildnml treats all of these files as user_nl_cpl files
        for generating the driver drv_flds_in file, which will appear in CaseDocs and in $RUNDIR.
@@ -62,27 +62,23 @@
   <!-- drydep Namelists                                                                          -->
   <!-- ========================================================================================  -->
 
-  <entry id="drydep_method">
-    <type>char</type>
-    <category>dry-deposition</category>
-    <group>drydep_inparm</group>
-    <valid_values>xactive_lnd,xactive_atm,table</valid_values>
-    <desc>
-      Where dry deposition is calculated (from land, atmosphere, or from a table)
-      This specifies the method used to calculate dry
-      deposition velocities of gas-phase chemical species.  The available methods are:
-      'table'       - prescribed method in CAM
-      'xactive_atm' - interactive method in CAM
-      'xactive_lnd' - interactive method in CLM
-    </desc>
-  </entry>
-
   <entry id="drydep_list">
     <type>char(300)</type>
     <category>dry-deposition</category>
     <group>drydep_inparm</group>
     <desc>
       List of species that undergo dry deposition.
+    </desc>
+  </entry>
+
+  <entry id="dep_data_file">
+    <type>char</type>
+    <input_pathname>abs</input_pathname>
+    <category>drv_flds_in</category>
+    <group>drydep_inparm</group>
+    <desc>
+      Full pathname of file containing gas phase deposition data including effective
+      Henry's law coefficients.
     </desc>
   </entry>
 

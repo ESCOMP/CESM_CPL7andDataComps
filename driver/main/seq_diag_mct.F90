@@ -254,6 +254,16 @@ module seq_diag_mct
   integer :: index_l2x_Flrl_rofdto
   integer :: index_l2x_Flrl_rofi
   integer :: index_l2x_Flrl_irrig
+  integer :: index_l2x_Flrl_dom_withd
+  integer :: index_l2x_Flrl_dom_rf
+  integer :: index_l2x_Flrl_liv_withd
+  integer :: index_l2x_Flrl_liv_rf
+  integer :: index_l2x_Flrl_elec_withd
+  integer :: index_l2x_Flrl_elec_rf
+  integer :: index_l2x_Flrl_mfc_withd
+  integer :: index_l2x_Flrl_mfc_rf
+  integer :: index_l2x_Flrl_min_withd
+  integer :: index_l2x_Flrl_min_rf
 
   integer :: index_x2l_Faxa_lwdn
   integer :: index_x2l_Faxa_rainc
@@ -273,6 +283,16 @@ module seq_diag_mct
   integer :: index_x2r_Flrl_rofdto
   integer :: index_x2r_Flrl_rofi
   integer :: index_x2r_Flrl_irrig
+  integer :: index_x2r_Flrl_dom_withd
+  integer :: index_x2r_Flrl_dom_rf
+  integer :: index_x2r_Flrl_liv_withd
+  integer :: index_x2r_Flrl_liv_rf
+  integer :: index_x2r_Flrl_elec_withd
+  integer :: index_x2r_Flrl_elec_rf
+  integer :: index_x2r_Flrl_mfc_withd
+  integer :: index_x2r_Flrl_mfc_rf
+  integer :: index_x2r_Flrl_min_withd
+  integer :: index_x2r_Flrl_min_rf
 
   integer :: index_o2x_Fioo_frazil ! currently used by e3sm
   integer :: index_o2x_Fioo_q      ! currently used by cesm
@@ -869,6 +889,16 @@ contains
           index_l2x_Flrl_rofdto = mct_aVect_indexRA(l2x_l,'Flrl_rofdto')
           index_l2x_Flrl_rofi   = mct_aVect_indexRA(l2x_l,'Flrl_rofi')
           index_l2x_Flrl_irrig  = mct_aVect_indexRA(l2x_l,'Flrl_irrig', perrWith='quiet')
+          index_l2x_Flrl_dom_withd  = mct_aVect_indexRA(l2x_l,'Flrl_dom_withd', perrWith='quiet')
+          index_l2x_Flrl_dom_rf  = mct_aVect_indexRA(l2x_l,'Flrl_dom_rf', perrWith='quiet')
+          index_l2x_Flrl_liv_withd  = mct_aVect_indexRA(l2x_l,'Flrl_liv_withd', perrWith='quiet')
+          index_l2x_Flrl_liv_rf  = mct_aVect_indexRA(l2x_l,'Flrl_liv_rf', perrWith='quiet')
+          index_l2x_Flrl_elec_withd  = mct_aVect_indexRA(l2x_l,'Flrl_elec_withd', perrWith='quiet')
+          index_l2x_Flrl_elec_rf  = mct_aVect_indexRA(l2x_l,'Flrl_elec_rf', perrWith='quiet')
+          index_l2x_Flrl_mfc_withd  = mct_aVect_indexRA(l2x_l,'Flrl_mfc_withd', perrWith='quiet')
+          index_l2x_Flrl_mfc_rf  = mct_aVect_indexRA(l2x_l,'Flrl_mfc_rf', perrWith='quiet')
+          index_l2x_Flrl_min_withd  = mct_aVect_indexRA(l2x_l,'Flrl_min_withd', perrWith='quiet')
+          index_l2x_Flrl_min_rf  = mct_aVect_indexRA(l2x_l,'Flrl_min_rf', perrWith='quiet')
 
           index_l2x_Fall_evap_16O    = mct_aVect_indexRA(l2x_l,'Fall_evap_16O',perrWith='quiet')
           if ( index_l2x_Fall_evap_16O /= 0 ) flds_wiso_lnd = .true.
@@ -902,6 +932,22 @@ contains
           if (index_l2x_Flrl_irrig /= 0) then
              nf = f_wroff ; budg_dataL(nf,ic,ip) = budg_dataL(nf,ic,ip) - ca_l*l2x_l%rAttr(index_l2x_Flrl_irrig,n)
           end if
+          if (index_l2x_Flrl_dom_withd /= 0) then
+            nf = f_wroff ; budg_dataL(nf,ic,ip) = budg_dataL(nf,ic,ip) - ca_l*l2x_l%rAttr(index_l2x_Flrl_dom_withd,n) + ca_l*l2x_l%rAttr(index_l2x_Flrl_dom_rf,n)
+          end if
+          if (index_l2x_Flrl_liv_withd /= 0) then
+               nf = f_wroff ; budg_dataL(nf,ic,ip) = budg_dataL(nf,ic,ip) - ca_l*l2x_l%rAttr(index_l2x_Flrl_liv_withd,n) + ca_l*l2x_l%rAttr(index_l2x_Flrl_liv_rf,n)
+          end if
+          if (index_l2x_Flrl_elec_withd /= 0) then
+               nf = f_wroff ; budg_dataL(nf,ic,ip) = budg_dataL(nf,ic,ip) - ca_l*l2x_l%rAttr(index_l2x_Flrl_elec_withd,n) + ca_l*l2x_l%rAttr(index_l2x_Flrl_elec_rf,n)
+          end if
+          if (index_l2x_Flrl_mfc_withd /= 0) then
+               nf = f_wroff ; budg_dataL(nf,ic,ip) = budg_dataL(nf,ic,ip) - ca_l*l2x_l%rAttr(index_l2x_Flrl_mfc_withd,n) + ca_l*l2x_l%rAttr(index_l2x_Flrl_mfc_rf,n)
+          end if
+          if (index_l2x_Flrl_min_withd /= 0) then
+               nf = f_wroff ; budg_dataL(nf,ic,ip) = budg_dataL(nf,ic,ip) - ca_l*l2x_l%rAttr(index_l2x_Flrl_min_withd,n) + ca_l*l2x_l%rAttr(index_l2x_Flrl_min_rf,n)
+          end if
+            
           nf = f_wioff ; budg_dataL(nf,ic,ip) = budg_dataL(nf,ic,ip) - ca_l*l2x_l%rAttr(index_l2x_Flrl_rofi,n)
 
           if ( flds_wiso_lnd )then
@@ -1077,6 +1123,16 @@ contains
        index_x2r_Flrl_rofsub = mct_aVect_indexRA(x2r_r,'Flrl_rofsub')
        index_x2r_Flrl_rofdto = mct_aVect_indexRA(x2r_r,'Flrl_rofdto')
        index_x2r_Flrl_irrig  = mct_aVect_indexRA(x2r_r,'Flrl_irrig', perrWith='quiet')
+       index_x2r_Flrl_dom_withd  = mct_aVect_indexRA(x2r_r,'Flrl_dom_withd', perrWith='quiet')
+       index_x2r_Flrl_dom_rf  = mct_aVect_indexRA(x2r_r,'Flrl_dom_rf', perrWith='quiet')
+       index_x2r_Flrl_liv_withd  = mct_aVect_indexRA(x2r_r,'Flrl_liv_withd', perrWith='quiet')
+       index_x2r_Flrl_liv_rf  = mct_aVect_indexRA(x2r_r,'Flrl_liv_rf', perrWith='quiet')
+       index_x2r_Flrl_elec_withd  = mct_aVect_indexRA(x2r_r,'Flrl_elec_withd', perrWith='quiet')
+       index_x2r_Flrl_elec_rf  = mct_aVect_indexRA(x2r_r,'Flrl_elec_rf', perrWith='quiet')
+       index_x2r_Flrl_mfc_withd  = mct_aVect_indexRA(x2r_r,'Flrl_mfc_withd', perrWith='quiet')
+       index_x2r_Flrl_mfc_rf  = mct_aVect_indexRA(x2r_r,'Flrl_mfc_rf', perrWith='quiet')
+       index_x2r_Flrl_min_withd  = mct_aVect_indexRA(x2r_r,'Flrl_min_withd', perrWith='quiet')
+       index_x2r_Flrl_min_rf  = mct_aVect_indexRA(x2r_r,'Flrl_min_rf', perrWith='quiet')
        index_x2r_Flrl_rofi   = mct_aVect_indexRA(x2r_r,'Flrl_rofi')
 
        index_x2r_Flrl_rofl_16O = mct_aVect_indexRA(x2r_r,'Flrl_rofl_16O', perrWith='quiet')
@@ -1103,6 +1159,21 @@ contains
             + ca_r*x2r_r%rAttr(index_x2r_Flrl_rofdto,n)
        if (index_x2r_Flrl_irrig /= 0) then
           nf = f_wroff; budg_dataL(nf,ic,ip) = budg_dataL(nf,ic,ip) + ca_r*x2r_r%rAttr(index_x2r_Flrl_irrig,n)
+       end if
+       if (index_x2r_Flrl_dom_withd /= 0) then
+          nf = f_wroff; budg_dataL(nf,ic,ip) = budg_dataL(nf,ic,ip) + ca_r*x2r_r%rAttr(index_x2r_Flrl_dom_withd,n) - ca_r*x2r_r%rAttr(index_x2r_Flrl_dom_rf,n)
+       end if
+       if (index_x2r_Flrl_liv_withd /= 0) then
+          nf = f_wroff; budg_dataL(nf,ic,ip) = budg_dataL(nf,ic,ip) + ca_r*x2r_r%rAttr(index_x2r_Flrl_liv_withd,n) - ca_r*x2r_r%rAttr(index_x2r_Flrl_liv_rf,n)
+       end if
+       if (index_x2r_Flrl_elec_withd /= 0) then
+          nf = f_wroff; budg_dataL(nf,ic,ip) = budg_dataL(nf,ic,ip) + ca_r*x2r_r%rAttr(index_x2r_Flrl_elec_withd,n) - ca_r*x2r_r%rAttr(index_x2r_Flrl_elec_rf,n)
+       end if
+       if (index_x2r_Flrl_mfc_withd /= 0) then
+          nf = f_wroff; budg_dataL(nf,ic,ip) = budg_dataL(nf,ic,ip) + ca_r*x2r_r%rAttr(index_x2r_Flrl_mfc_withd,n)  - ca_r*x2r_r%rAttr(index_x2r_Flrl_mfc_rf,n)
+       end if
+       if (index_x2r_Flrl_min_withd /= 0) then
+          nf = f_wroff; budg_dataL(nf,ic,ip) = budg_dataL(nf,ic,ip) + ca_r*x2r_r%rAttr(index_x2r_Flrl_min_withd,n)  - ca_r*x2r_r%rAttr(index_x2r_Flrl_min_rf,n)
        end if
 
        nf = f_wioff; budg_dataL(nf,ic,ip) = budg_dataL(nf,ic,ip) + ca_r*x2r_r%rAttr(index_x2r_Flrl_rofi,n)

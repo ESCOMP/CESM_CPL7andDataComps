@@ -21,6 +21,7 @@ module prep_rof_mod
   use component_type_mod, only: rof, lnd, atm
   use prep_lnd_mod, only: prep_lnd_get_mapper_Fr2l
   use map_lnd2rof_irrig_mod, only: map_lnd2rof_irrig
+  use map_lnd2rof_sectorwater_mod, only: map_lnd2rof_sectorwater
 
   implicit none
   save
@@ -78,10 +79,25 @@ module prep_rof_mod
 
   ! field names and lists, for fields that need to be treated specially
   character(len=*), parameter :: irrig_flux_field = 'Flrl_irrig'
+  character(len=*), parameter :: dom_withd_flux_field = 'Flrl_dom_withd'
+  character(len=*), parameter :: dom_rf_flux_field = 'Flrl_dom_rf'
+  character(len=*), parameter :: liv_withd_flux_field = 'Flrl_liv_withd'
+  character(len=*), parameter :: liv_rf_flux_field = 'Flrl_liv_rf'
+  character(len=*), parameter :: elec_withd_flux_field = 'Flrl_elec_withd'
+  character(len=*), parameter :: elec_rf_flux_field =  'Flrl_elec_rf'
+  character(len=*), parameter :: mfc_withd_flux_field = 'Flrl_mfc_withd'
+  character(len=*), parameter :: mfc_rf_flux_field = 'Flrl_mfc_rf'
+  character(len=*), parameter :: min_withd_flux_field = 'Flrl_min_withd'
+  character(len=*), parameter :: min_rf_flux_field = 'Flrl_min_rf'  
   ! fluxes mapped from lnd to rof that don't need any special handling
   character(CXX) :: lnd2rof_normal_fluxes
   ! whether the model is being run with a separate irrigation field
   logical :: have_irrig_field
+  logical :: have_dom_field
+  logical :: have_elec_field
+  logical :: have_liv_field
+  logical :: have_mfc_field
+  logical :: have_min_field
   ! samegrid atm and lnd
   logical :: samegrid_al   ! samegrid atm and lnd
   !================================================================================================
@@ -121,6 +137,16 @@ contains
     type(mct_aVect) , pointer   :: a2x_ax
     type(mct_aVect) , pointer   :: x2r_rx
     integer                     :: index_irrig
+    integer                     :: index_dom_withd
+    integer                     :: index_dom_rf
+    integer                     :: index_elec_withd
+    integer                     :: index_elec_rf
+    integer                     :: index_liv_withd
+    integer                     :: index_liv_rf
+    integer                     :: index_mfc_withd
+    integer                     :: index_mfc_rf
+    integer                     :: index_min_withd
+    integer                     :: index_min_rf    
     character(*)    , parameter :: subname = '(prep_rof_init)'
     character(*)    , parameter :: F00 = "('"//subname//" : ', 4A )"
     !---------------------------------------------------------------
@@ -141,15 +167,55 @@ contains
     if (rof_present) then
        x2r_rx => component_get_x2c_cx(rof(1))
        index_irrig = mct_aVect_indexRA(x2r_rx, irrig_flux_field, perrWith='quiet')
+       index_dom_withd = mct_aVect_indexRA(x2r_rx, dom_withd_flux_field, perrWith='quiet')
+       index_dom_rf = mct_aVect_indexRA(x2r_rx, dom_rf_flux_field, perrWith='quiet')
+       index_liv_withd = mct_aVect_indexRA(x2r_rx, liv_withd_flux_field, perrWith='quiet')
+       index_liv_rf = mct_aVect_indexRA(x2r_rx, liv_rf_flux_field, perrWith='quiet')
+       index_elec_withd = mct_aVect_indexRA(x2r_rx, elec_withd_flux_field, perrWith='quiet')
+       index_elec_rf = mct_aVect_indexRA(x2r_rx, elec_rf_flux_field, perrWith='quiet')
+       index_mfc_withd = mct_aVect_indexRA(x2r_rx, mfc_withd_flux_field, perrWith='quiet')
+       index_mfc_rf = mct_aVect_indexRA(x2r_rx, mfc_rf_flux_field, perrWith='quiet')
+       index_min_withd = mct_aVect_indexRA(x2r_rx, min_withd_flux_field, perrWith='quiet')
+       index_min_rf = mct_aVect_indexRA(x2r_rx, min_rf_flux_field, perrWith='quiet')       
        if (index_irrig == 0) then
           have_irrig_field = .false.
        else
           have_irrig_field = .true.
        end if
+       if (index_dom_withd == 0) then
+          have_dom_field = .false.
+       else
+          have_dom_field = .true.
+       end if
+       if (index_liv_withd == 0) then
+         have_liv_field = .false.
+       else
+          have_liv_field = .true.
+       end if
+       if (index_elec_with == 0) then
+          have_elec_field = .false.
+       else
+          have_elec_field = .true.
+       end if
+       if (index_mfc_withd == 0) then
+          have_mfc_field = .false.
+       else
+          have_mfc_field = .true.
+       end if
+       if (index_min_withd == 0) then
+          have_min_field = .false.
+       else
+          have_min_field = .true.
+       end if       
     else
        ! If rof_present is false, have_irrig_field should be irrelevant; we arbitrarily
        ! set it to false in this case.
        have_irrig_field = .false.
+       have_dom_field = .false.
+       have_liv_field = .false.
+       have_elec_field = .false.
+       have_mfc_field = .false.
+       have_min_field = .false.       
     end if
 
     if (rof_present .and. lnd_present) then
@@ -196,6 +262,46 @@ contains
           call shr_string_listDiff( &
                list1 = seq_flds_l2x_fluxes_to_rof, &
                list2 = irrig_flux_field, &
+               listout = lnd2rof_normal_fluxes)
+          call shr_string_listDiff( &
+               list1 = seq_flds_l2x_fluxes_to_rof, &
+               list2 = dom_withd_flux_field, &
+               listout = lnd2rof_normal_fluxes)
+          call shr_string_listDiff( &
+               list1 = seq_flds_l2x_fluxes_to_rof, &
+               list2 = dom_rf_flux_field, &
+               listout = lnd2rof_normal_fluxes)
+          call shr_string_listDiff( &
+               list1 = seq_flds_l2x_fluxes_to_rof, &
+               list2 = liv_withd_flux_field, &
+               listout = lnd2rof_normal_fluxes)
+          call shr_string_listDiff( &
+               list1 = seq_flds_l2x_fluxes_to_rof, &
+               list2 = liv_rf_flux_field, &
+               listout = lnd2rof_normal_fluxes)
+          call shr_string_listDiff( &
+               list1 = seq_flds_l2x_fluxes_to_rof, &
+               list2 = elec_withd_flux_field, &
+               listout = lnd2rof_normal_fluxes)
+          call shr_string_listDiff( &
+               list1 = seq_flds_l2x_fluxes_to_rof, &
+               list2 = elec_rf_flux_field, &
+               listout = lnd2rof_normal_fluxes)
+          call shr_string_listDiff( &
+               list1 = seq_flds_l2x_fluxes_to_rof, &
+               list2 = mfc_withd_flux_field, &
+               listout = lnd2rof_normal_fluxes)
+          call shr_string_listDiff( &
+               list1 = seq_flds_l2x_fluxes_to_rof, &
+               list2 = mfc_rf_flux_field, &
+               listout = lnd2rof_normal_fluxes)
+          call shr_string_listDiff( &
+               list1 = seq_flds_l2x_fluxes_to_rof, &
+               list2 = min_withd_flux_field, &
+               listout = lnd2rof_normal_fluxes)
+          call shr_string_listDiff( &
+               list1 = seq_flds_l2x_fluxes_to_rof, &
+               list2 = min_rf_flux_field, &
                listout = lnd2rof_normal_fluxes)
        endif
        call shr_sys_flush(logunit)
@@ -407,6 +513,16 @@ contains
     integer, save :: index_l2x_Flrl_rofi
     integer, save :: index_l2x_Flrl_demand
     integer, save :: index_l2x_Flrl_irrig
+    integer, save :: index_l2x_Flrl_dom_withd
+    integer, save :: index_l2x_Flrl_dom_rf
+    integer, save :: index_l2x_Flrl_liv_withd
+    integer, save :: index_l2x_Flrl_liv_rf
+    integer, save :: index_l2x_Flrl_elec_withd
+    integer, save :: index_l2x_Flrl_elec_rf
+    integer, save :: index_l2x_Flrl_mfc_withd
+    integer, save :: index_l2x_Flrl_mfc_rf
+    integer, save :: index_l2x_Flrl_min_withd
+    integer, save :: index_l2x_Flrl_min_rf    
     integer, save :: index_x2r_Flrl_rofsur
     integer, save :: index_x2r_Flrl_rofgwl
     integer, save :: index_x2r_Flrl_rofsub
@@ -414,6 +530,16 @@ contains
     integer, save :: index_x2r_Flrl_rofi
     integer, save :: index_x2r_Flrl_demand
     integer, save :: index_x2r_Flrl_irrig
+    integer, save :: index_x2r_Flrl_dom_withd
+    integer, save :: index_x2r_Flrl_dom_rf
+    integer, save :: index_x2r_Flrl_liv_withd
+    integer, save :: index_x2r_Flrl_liv_rf
+    integer, save :: index_x2r_Flrl_elec_withd
+    integer, save :: index_x2r_Flrl_elec_rf
+    integer, save :: index_x1r_Flrl_mfc_withd
+    integer, save :: index_x2r_Flrl_mfc_rf
+    integer, save :: index_x2r_Flrl_min_withd
+    integer, save :: index_x2r_Flrl_min_rf    
     integer, save :: index_l2x_Flrl_rofl_16O
     integer, save :: index_l2x_Flrl_rofi_16O
     integer, save :: index_x2r_Flrl_rofl_16O
@@ -487,6 +613,26 @@ contains
        if (have_irrig_field) then
           index_l2x_Flrl_irrig  = mct_aVect_indexRA(l2x_r,'Flrl_irrig' )
        end if
+       if (have_dom_field) then
+          index_l2x_Flrl_dom_withd  = mct_aVect_indexRA(l2x_r,'Flrl_dom_withd' )
+          index_l2x_Flrl_dom_rf  = mct_aVect_indexRA(l2x_r,'Flrl_dom_rf' )
+       end if
+       if (have_liv_field) then
+          index_l2x_Flrl_liv_withd  = mct_aVect_indexRA(l2x_r,'Flrl_liv_withd' )
+          index_l2x_Flrl_liv_rf  = mct_aVect_indexRA(l2x_r,'Flrl_liv_rf' )
+       end if
+       if (have_elec_field) then
+          index_l2x_Flrl_elec_withd  = mct_aVect_indexRA(l2x_r,'Flrl_elec_withd' )
+          index_l2x_Flrl_elec_rf  = mct_aVect_indexRA(l2x_r,'Flrl_elec_rf' )
+       end if
+       if (have_mfc_field) then
+          index_l2x_Flrl_mfc_withd  = mct_aVect_indexRA(l2x_r,'Flrl_mfc_withd' )
+          index_l2x_Flrl_mfc_rf  = mct_aVect_indexRA(l2x_r,'Flrl_mfc_rf' )
+       end if
+       if (have_min_field) then
+          index_l2x_Flrl_min_withd  = mct_aVect_indexRA(l2x_r,'Flrl_min_withd' )
+          index_l2x_Flrl_min_rf  = mct_aVect_indexRA(l2x_r,'Flrl_min_rf' )
+       end if
        index_l2x_Flrl_rofi   = mct_aVect_indexRA(l2x_r,'Flrl_rofi' )
        if(trim(cime_model) .eq. 'e3sm') then
           index_l2x_Flrl_demand = mct_aVect_indexRA(l2x_r,'Flrl_demand' )
@@ -500,6 +646,26 @@ contains
        if (have_irrig_field) then
           index_x2r_Flrl_irrig  = mct_aVect_indexRA(x2r_r,'Flrl_irrig' )
        end if
+       if (have_dom_field) then
+          index_x2r_Flrl_dom_withd  = mct_aVect_indexRA(x2r_r,'Flrl_dom_withd' )
+          index_x2r_Flrl_dom_rf  = mct_aVect_indexRA(x2r_r,'Flrl_dom_rf' )
+       end if
+       if (have_liv_field) then
+          index_x2r_Flrl_liv_withd  = mct_aVect_indexRA(x2r_r,'Flrl_liv_withd' )
+          index_x2r_Flrl_liv_rf  = mct_aVect_indexRA(x2r_r,'Flrl_liv_rf' )
+       end if
+       if (have_elec_field) then
+          index_x2r_Flrl_elec_withd  = mct_aVect_indexRA(x2r_r,'Flrl_elec_withd' )
+          index_x2r_Flrl_elec_rf  = mct_aVect_indexRA(x2r_r,'Flrl_elec_rf' )
+       end if
+       if (have_mfc_field) then
+          index_x2r_Flrl_mfc_withd  = mct_aVect_indexRA(x2r_r,'Flrl_mfc_withd' )
+          index_x2r_Flrl_mfc_rf  = mct_aVect_indexRA(x2r_r,'Flrl_mfc_rf' )
+       end if
+       if (have_min_field) then
+          index_x2r_Flrl_min_withd  = mct_aVect_indexRA(x2r_r,'Flrl_min_withd' )
+          index_x2r_Flrl_min_rf  = mct_aVect_indexRA(x2r_r,'Flrl_min_rf' )
+       end if       
        if(trim(cime_model) .eq. 'e3sm') then
          index_l2x_Flrl_Tqsur = mct_aVect_indexRA(l2x_r,'Flrl_Tqsur' )
          index_l2x_Flrl_Tqsub = mct_aVect_indexRA(l2x_r,'Flrl_Tqsub' )
@@ -550,6 +716,36 @@ contains
        if (have_irrig_field) then
           mrgstr(index_x2r_Flrl_irrig) = trim(mrgstr(index_x2r_Flrl_irrig))//' = '// &
                trim(fracstr)//'*l2x%Flrl_irrig'
+       end if
+       if (have_dom_field) then
+          mrgstr(index_x2r_Flrl_dom_withd) = trim(mrgstr(index_x2r_Flrl_dom_withd))//' = '// &
+               trim(fracstr)//'*l2x%Flrl_dom_withd'
+          mrgstr(index_x2r_Flrl_dom_rf) = trim(mrgstr(index_x2r_Flrl_dom_rf))//' = '// &
+               trim(fracstr)//'*l2x%Flrl_dom_rf'
+       end if
+       if (have_liv_field) then
+          mrgstr(index_x2r_Flrl_liv_withd) = trim(mrgstr(index_x2r_Flrl_liv_withd))//' = '// &
+               trim(fracstr)//'*l2x%Flrl_liv_withd'
+          mrgstr(index_x2r_Flrl_liv_rf) = trim(mrgstr(index_x2r_Flrl_liv_rf))//' = '// &
+               trim(fracstr)//'*l2x%Flrl_liv_rf'
+       end if
+       if (have_elec_field) then
+          mrgstr(index_x2r_Flrl_elec_withd) = trim(mrgstr(index_x2r_Flrl_elec_withd))//' = '// &
+               trim(fracstr)//'*l2x%Flrl_elec_withd'
+          mrgstr(index_x2r_Flrl_elec_rf) = trim(mrgstr(index_x2r_Flrl_elec_rf))//' = '// &
+               trim(fracstr)//'*l2x%Flrl_elec_rf'
+       end if
+       if (have_mfc_field) then
+          mrgstr(index_x2r_Flrl_mfc_withd) = trim(mrgstr(index_x2r_Flrl_mfc_withd))//' = '// &
+               trim(fracstr)//'*l2x%Flrl_mfc_withd'
+          mrgstr(index_x2r_Flrl_dom_rf) = trim(mrgstr(index_x2r_Flrl_mfc_rf))//' = '// &
+               trim(fracstr)//'*l2x%Flrl_mfc_rf'
+       end if
+       if (have_min_field) then
+          mrgstr(index_x2r_Flrl_min_withd) = trim(mrgstr(index_x2r_Flrl_min_withd))//' = '// &
+               trim(fracstr)//'*l2x%Flrl_min_withd'
+          mrgstr(index_x2r_Flrl_min_rf) = trim(mrgstr(index_x2r_Flrl_min_rf))//' = '// &
+               trim(fracstr)//'*l2x%Flrl_min_rf'
        end if
        if(trim(cime_model) .eq. 'e3sm') then
           mrgstr(index_x2r_Flrl_Tqsur) = trim(mrgstr(index_x2r_Flrl_Tqsur))//' = '//'l2x%Flrl_Tqsur'
@@ -619,6 +815,26 @@ contains
        endif
        if (have_irrig_field) then
           x2r_r%rAttr(index_x2r_Flrl_irrig,i) = l2x_r%rAttr(index_l2x_Flrl_irrig,i) * frac
+       end if
+       if (have_dom_field) then
+          x2r_r%rAttr(index_x2r_Flrl_dom_withd,i) = l2x_r%rAttr(index_l2x_Flrl_dom_withd,i) * frac
+          x2r_r%rAttr(index_x2r_Flrl_dom_rf,i) = l2x_r%rAttr(index_l2x_Flrl_dom_rf,i) * frac
+       end if
+       if (have_liv_field) then
+          x2r_r%rAttr(index_x2r_Flrl_liv_withd,i) = l2x_r%rAttr(index_l2x_Flrl_liv_withd,i) * frac
+          x2r_r%rAttr(index_x2r_Flrl_liv_rf,i) = l2x_r%rAttr(index_l2x_Flrl_liv_rf,i) * frac
+       end if
+       if (have_elec_field) then
+          x2r_r%rAttr(index_x2r_Flrl_elec_withd,i) = l2x_r%rAttr(index_l2x_Flrl_elec_withd,i) * frac
+          x2r_r%rAttr(index_x2r_Flrl_elec_rf,i) = l2x_r%rAttr(index_l2x_Flrl_elec_rf,i) * frac
+       end if
+       if (have_mfc_field) then
+          x2r_r%rAttr(index_x2r_Flrl_mfc_withd,i) = l2x_r%rAttr(index_l2x_Flrl_mfc_withd,i) * frac
+          x2r_r%rAttr(index_x2r_Flrl_mfc_rf,i) = l2x_r%rAttr(index_l2x_Flrl_mfc_rf,i) * frac
+       end if
+       if (have_min_field) then
+          x2r_r%rAttr(index_x2r_Flrl_min_withd,i) = l2x_r%rAttr(index_l2x_Flrl_min_withd,i) * frac
+          x2r_r%rAttr(index_x2r_Flrl_min_rf,i) = l2x_r%rAttr(index_l2x_Flrl_min_rf,i) * frac
        end if
        if(trim(cime_model) .eq. 'e3sm') then
          x2r_r%rAttr(index_x2r_Flrl_Tqsur,i) = l2x_r%rAttr(index_l2x_Flrl_Tqsur,i)
@@ -698,6 +914,29 @@ contains
                l2r_l = l2racc_lx(eli), &
                r2x_r = r2x_rx, &
                irrig_flux_field = irrig_flux_field, &
+               avwts_s = fractions_lx(efi), &
+               avwtsfld_s = 'lfrin', &
+               mapper_Fl2r = mapper_Fl2r, &
+               mapper_Fr2l = mapper_Fr2l, &
+               l2r_r = l2r_rx(eri))
+       end if
+       ! map sector water fluxes with map_lnd2rof_sectorwater, map other water fluxes with the same subroutine
+       if (have_dom_field .and. have_liv_field .and. have_elec_field .and. have_mfc_field .and. have_min_field) then
+          r2x_rx => component_get_c2x_cx(rof(eri))
+          mapper_Fr2l => prep_lnd_get_mapper_Fr2l()
+          call map_lnd2rof_sectorwater( &
+               l2r_l = l2racc_lx(eli), &
+               r2x_r = r2x_rx, &
+               dom_withd_flux_field = dom_withd_flux_field, &
+               dom_rf_flux_field = dom_rf_flux_field, &
+               liv_withd_flux_field = liv_withd_flux_field, &
+               liv_rf_flux_field = liv_rf_flux_field, &
+               elec_withd_flux_field = elec_withd_flux_field, &
+               elec_rf_flux_field = elec_rf_flux_field, &
+               mfc_withd_flux_field = mfc_withd_flux_field, &
+               mfc_rf_flux_field = mfc_rf_flux_field, &
+               min_withd_flux_field = min_withd_flux_field, &
+               min_rf_flux_field = min_rf_flux_field, &
                avwts_s = fractions_lx(efi), &
                avwtsfld_s = 'lfrin', &
                mapper_Fl2r = mapper_Fl2r, &

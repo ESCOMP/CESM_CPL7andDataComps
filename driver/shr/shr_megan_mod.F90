@@ -94,8 +94,8 @@ contains
   ! Example:
   ! &megan_emis_nl
   !  megan_specifier = 'ISOP = isoprene',
-  !     'C10H16 = myrcene + sabinene + limonene + carene_3 + ocimene_t_b + pinene_b + ...',
-  !     'CH3OH = methanol',
+  !     'C10H16 = myrcene + sabinene + limonene + carene_3 + ocimene_t_b + pinene_b + ',
+  !     ' thujene_a + bornene + 0.5*(terpineol_4 + terpineol_a + terpinyl_ACT_a + myrtenal) + ...',
   !     'C2H5OH = ethanol',
   !     'CH2O = formaldehyde',
   !     'CH3CHO = acetaldehyde',
@@ -119,9 +119,9 @@ contains
     logical :: exists           ! if file exists or not
     integer :: mpicom           ! MPI communicator
 
-    integer, parameter :: maxspc = 100
+    integer, parameter :: maxspc = 200
 
-    character(len=2*CX) :: megan_specifier(maxspc) = ' '
+    character(len=CX) :: megan_specifier(maxspc) = ' '
     logical           :: megan_mapped_emisfctrs = .false.
     character(len=CL) :: megan_factors_file = ' '
 

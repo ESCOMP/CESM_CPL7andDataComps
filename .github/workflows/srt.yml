@@ -91,10 +91,11 @@ jobs:
           mkdir -p $HOME/cesm/inputdata
           pushd $GITHUB_WORKSPACE/cesm/cime/CIME/tests
           export CIME_TEST_PLATFORM=ubuntu-latest
-          export NETCDF_PATH=/usr
           export PNETCDF_PATH=/usr
           export LD_LIBRARY_PATH=/usr/lib/libx86_64-linux-gnu/:$LD_LIBRARY_PATH
           cat <<EOF >> $GITHUB_WORKSPACE/cesm/ccs_config/machines/cmake_macros/ubuntu-latest.cmake
+          set(NetCDF_C_INCLUDE_DIR /usr/include)
+          set(NetCDF_C_LIBRARY /usr/lib/x86_64-gnu-Linux/libnetcdf.so)
           set(NetCDF_Fortran_INCLUDE_DIR /usr/include)
           set(NetCDF_Fortran_LIBRARY /usr/lib/x86_64-gnu-Linux/libnetcdff.so)
           EOF

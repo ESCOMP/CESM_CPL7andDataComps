@@ -24,7 +24,7 @@ jobs:
       FC: mpifort
       CXX: mpicxx
       CPPFLAGS: "-I/usr/include -I/usr/local/include "
-      LDFLAGS: "-L/usr/lib/x86_64-linux-gnu -lnetcdf -lnetcdff -lpnetcdf"     
+      LDFLAGS: "-L/usr/lib/x86_64-linux-gnu -lnetcdf -lnetcdff -lpnetcdf"
       # Versions of all dependencies can be updated here
       CIME_MODEL: cesm
       CIME_DRIVER: mct
@@ -37,9 +37,9 @@ jobs:
         id: load-env
         run: |
           set -x
-          sudo apt-get update 
+          sudo apt-get update
           sudo apt-get install libxml2-utils
-          sudo apt-get install netcdf-bin 
+          sudo apt-get install netcdf-bin
           sudo apt-get install libnetcdf-dev
           sudo apt-get install libnetcdff-dev
           sudo apt-get install pnetcdf-bin
@@ -71,13 +71,13 @@ jobs:
         uses: actions/checkout@v3
         with:
           path: cesm/components/cpl7
-          
+
       # Checkout cesm datamodels and support
       - name: checkout externals
         run: |
           pushd cesm
           ./manage_externals/checkout_externals ccs_config cime share mct parallelio
-          
+
       - name: Cache inputdata
         id: cache-inputdata
         uses: actions/cache@v3
@@ -92,19 +92,19 @@ jobs:
           pushd $GITHUB_WORKSPACE/cesm/cime/CIME/tests
           export CIME_TEST_PLATFORM=ubuntu-latest
           export PNETCDF_PATH=/usr
-          export LD_LIBRARY_PATH=/usr/lib/libx86_64-linux-gnu/:$LD_LIBRARY_PATH
+          pushd /usr/lib
+          sudo ln -fs x86_64-linux-gnu/*netcdf* .
+          popd
+          export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/:$LD_LIBRARY_PATH
           cat <<EOF >> $GITHUB_WORKSPACE/cesm/ccs_config/machines/cmake_macros/ubuntu-latest.cmake
-          set(NetCDF_C_INCLUDE_DIR /usr/include)
-          set(NetCDF_C_LIBRARY /usr/lib/x86_64-gnu-Linux/libnetcdf.so)
-          set(NetCDF_Fortran_INCLUDE_DIR /usr/include)
-          set(NetCDF_Fortran_LIBRARY /usr/lib/x86_64-gnu-Linux/libnetcdff.so)
+          set(NETCDF_PATH /usr)
           EOF
           printenv >> $GITHUB_ENV
           popd
       - name: scripts regression tests
         run: |
           pushd $GITHUB_WORKSPACE/cesm/cime/CIME/tests
-          ./scripts_regression_tests.py  --no-fortran-run --compiler gnu --mpilib openmpi --machine ubuntu-latest 
+          ./scripts_regression_tests.py  --no-fortran-run --compiler gnu --mpilib openmpi --machine ubuntu-latest
           popd
 #     the following can be used by developers to login to the github server in case of errors
 #     see https://github.com/marketplace/actions/debugging-with-tmate for further details

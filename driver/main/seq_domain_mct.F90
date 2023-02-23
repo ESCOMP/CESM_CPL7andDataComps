@@ -333,7 +333,7 @@ contains
     end if
 
     if (rof_present .and. ocnrof_prognostic .and. samegrid_ro) then
-       gsmap_r  => component_get_gsmap_cx(glc) ! gsmap_gx
+       gsmap_r  => component_get_gsmap_cx(rof) ! gsmap_rx
        grofsize = mct_gsMap_gsize(gsMap_r)
 
        if (gocnsize /= grofsize) then

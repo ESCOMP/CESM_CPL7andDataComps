@@ -3,7 +3,7 @@ module test_check_fields
   ! Tests of check_fields in the component_type_mod, check_fields looks for NaN values
   ! in fields passed from components to the coupler
 
-  use pfunit_mod
+  use funit
   use component_type_mod
   use mct_mod
   use mct_wrapper_mod, only : mct_init, mct_clean

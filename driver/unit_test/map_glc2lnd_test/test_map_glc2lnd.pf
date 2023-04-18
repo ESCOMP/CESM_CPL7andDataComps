@@ -2,7 +2,7 @@ module test_map_glc2lnd
 
   ! Tests of map_glc2lnd_mod
 
-  use pfunit_mod
+  use funit
   use map_glc2lnd_mod
   use glc_elevclass_mod, only : glc_elevclass_init, glc_elevclass_clean, &
        glc_mean_elevation_virtual, glc_elevclass_as_string

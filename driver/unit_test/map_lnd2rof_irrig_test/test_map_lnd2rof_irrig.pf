@@ -3,7 +3,7 @@ module test_map_lnd2rof_irrig
   ! Tests of map_lnd2rof_irrig_mod
 
 #include "shr_assert.h"
-  use pfunit_mod
+  use funit
   use map_lnd2rof_irrig_mod
   use shr_kind_mod , only : r8 => shr_kind_r8
   use shr_log_mod, only : errMsg => shr_log_errMsg

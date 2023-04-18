@@ -2,7 +2,7 @@ module test_avect_wrapper
 
   ! Tests of avect_wrapper_mod, a module with some unit test utilities
 
-  use pfunit_mod
+  use funit
   use avect_wrapper_mod
   use mct_mod
   use mct_wrapper_mod, only : mct_init, mct_clean

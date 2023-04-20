@@ -2,7 +2,7 @@ module test_seq_map
 
   ! Tests of seq_map_mod
 
-  use pfunit_mod
+  use funit
   use seq_map_mod
   use seq_map_type_mod
   use mct_mod

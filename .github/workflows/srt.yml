@@ -77,7 +77,10 @@ jobs:
         run: |
           pushd cesm
           ./manage_externals/checkout_externals ccs_config cime share mct parallelio
-
+          pushd cime
+          git checkout master
+          popd
+          
       - name: Cache inputdata
         id: cache-inputdata
         uses: actions/cache@v3
@@ -90,6 +93,7 @@ jobs:
           mkdir -p $HOME/cesm/scratch
           mkdir -p $HOME/cesm/inputdata
           pushd $GITHUB_WORKSPACE/cesm/cime/CIME/tests
+          export SRCROOT=$GITHUB_WORKSPACE/cesm/
           export CIME_TEST_PLATFORM=ubuntu-latest
           export PNETCDF_PATH=/usr
           pushd /usr/lib
@@ -108,6 +112,6 @@ jobs:
           popd
 #     the following can be used by developers to login to the github server in case of errors
 #     see https://github.com/marketplace/actions/debugging-with-tmate for further details
-      - name: Setup tmate session
-        if: ${{ failure() }}
-        uses: mxschmitt/action-tmate@v3
+#      - name: Setup tmate session
+#        if: ${{ failure() }}
+#        uses: mxschmitt/action-tmate@v3

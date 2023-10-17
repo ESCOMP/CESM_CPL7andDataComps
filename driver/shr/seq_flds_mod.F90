@@ -2120,6 +2120,91 @@ contains
        units    = 'kg m-2 s-1'
        attname  = 'Flrl_irrig'
        call metadata_set(attname, longname, stdname, units)
+      ! Domestic usage  fluxes (land/rof only)
+       call seq_flds_add(l2x_fluxes,"Flrl_dom_withd")
+       call seq_flds_add(x2r_fluxes,"Flrl_dom_withd")
+       call seq_flds_add(l2x_fluxes_to_rof,'Flrl_dom_withd')
+       longname = 'Domestic usage flux (withdrawal from rivers)'
+       stdname  = 'domestic_withdrawals'
+       units    = 'kg m-2 s-1'
+       attname  = 'Flrl_dom_withd'
+       call metadata_set(attname, longname, stdname, units)
+       call seq_flds_add(l2x_fluxes,"Flrl_dom_rf")
+       call seq_flds_add(x2r_fluxes,"Flrl_dom_rf")
+       call seq_flds_add(l2x_fluxes_to_rof,'Flrl_dom_rf')
+       longname = 'Domestic usage return flow flux'
+       stdname  = 'domestic_return_flow'
+       units    = 'kg m-2 s-1'
+       attname  = 'Flrl_dom_rf'
+       call metadata_set(attname, longname, stdname, units)
+       ! Licestock usage  fluxes (land/rof only)
+       call seq_flds_add(l2x_fluxes,"Flrl_liv_withd")
+       call seq_flds_add(x2r_fluxes,"Flrl_liv_withd")
+       call seq_flds_add(l2x_fluxes_to_rof,'Flrl_liv_withd')
+       longname = 'Livestock usage flux (withdrawal from rivers)'
+       stdname  = 'livestock_withdrawals'
+       units    = 'kg m-2 s-1'
+       attname  = 'Flrl_liv_withd'
+       call metadata_set(attname, longname, stdname, units)
+       call seq_flds_add(l2x_fluxes,"Flrl_liv_rf")
+       call seq_flds_add(x2r_fluxes,"Flrl_liv_rf")
+       call seq_flds_add(l2x_fluxes_to_rof,'Flrl_liv_rf')
+       longname = 'Livestock usage return flow flux'
+       stdname  = 'livestock_return_flow'
+       units    = 'kg m-2 s-1'
+       attname  = 'Flrl_liv_rf'
+       call metadata_set(attname, longname, stdname, units)
+       ! Thermoelectric usage  fluxes (land/rof only)
+       call seq_flds_add(l2x_fluxes,"Flrl_elec_withd")
+       call seq_flds_add(x2r_fluxes,"Flrl_elec_withd")
+       call seq_flds_add(l2x_fluxes_to_rof,'Flrl_elec_withd')
+       longname = 'Thermoelectric usage flux (withdrawal from rivers)'
+       stdname  = 'thermoelectric_withdrawals'
+       units    = 'kg m-2 s-1'
+       attname  = 'Flrl_elec_withd'
+       call metadata_set(attname, longname, stdname, units)
+       call seq_flds_add(l2x_fluxes,"Flrl_elec_rf")
+       call seq_flds_add(x2r_fluxes,"Flrl_elec_rf")
+       call seq_flds_add(l2x_fluxes_to_rof,'Flrl_elec_rf')
+       longname = 'Thermoelectric usage return flow flux'
+       stdname  = 'thermoelectric_return_flow'
+       units    = 'kg m-2 s-1'
+       attname  = 'Flrl_elec_rf'
+       call metadata_set(attname, longname, stdname, units)
+       ! Manufacturing usage  fluxes (land/rof only)
+       call seq_flds_add(l2x_fluxes,"Flrl_mfc_withd")
+       call seq_flds_add(x2r_fluxes,"Flrl_mfc_withd")
+       call seq_flds_add(l2x_fluxes_to_rof,'Flrl_mfc_withd')
+       longname = 'Manufacturing usage flux (withdrawal from rivers)'
+       stdname  = 'manufacturing_withdrawals'
+       units    = 'kg m-2 s-1'
+       attname  = 'Flrl_mfc_withd'
+       call metadata_set(attname, longname, stdname, units)
+       call seq_flds_add(l2x_fluxes,"Flrl_min_rf")
+       call seq_flds_add(x2r_fluxes,"Flrl_min_rf")
+       call seq_flds_add(l2x_fluxes_to_rof,'Flrl_min_rf')
+       longname = 'Manufacturing usage return flow flux'
+       stdname  = 'manufacturing_return_flow'
+       units    = 'kg m-2 s-1'
+       attname  = 'Flrl_mfc_rf'
+       call metadata_set(attname, longname, stdname, units)
+       ! Mining usage  fluxes (land/rof only)
+       call seq_flds_add(l2x_fluxes,"Flrl_min_withd")
+       call seq_flds_add(x2r_fluxes,"Flrl_min_withd")
+       call seq_flds_add(l2x_fluxes_to_rof,'Flrl_min_withd')
+       longname = 'Mining usage flux (withdrawal from rivers)'
+       stdname  = 'mining_withdrawals'
+       units    = 'kg m-2 s-1'
+       attname  = 'Flrl_dom_withd'
+       call metadata_set(attname, longname, stdname, units)
+       call seq_flds_add(l2x_fluxes,"Flrl_min_rf")
+       call seq_flds_add(x2r_fluxes,"Flrl_min_rf")
+       call seq_flds_add(l2x_fluxes_to_rof,'Flrl_min_rf')
+       longname = 'Mining usage return flow flux'
+       stdname  = 'mining_return_flow'
+       units    = 'kg m-2 s-1'
+       attname  = 'Flrl_min_rf'
+       call metadata_set(attname, longname, stdname, units)
     end if
 
     !-----------------------------
